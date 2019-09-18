@@ -33,10 +33,9 @@
 <script>
 export default {
   data () {
-    let validator = function (rule, value, callBack) {
-      // rule当前规则  value当前表单项的值  callback 回调函数
+    // rule当前规则  value当前表单项的值  callback 回调函数
+    let validator = (rule, value, callBack) =>
       value ? callBack() : callBack(new Error('请同意用户协议与隐私条款'))
-    }
     return {
       loginFrom: {
         mobile: '', // 手机号
@@ -64,9 +63,29 @@ export default {
     login () {
       // 校验整个表单的规则
       // validate 是一个方法 => 方法中传入的一个函数 两个校验参数  是否校验成功/未校验成功的字段
-      this.$refs.loginFrom.validate(function (isOK) {
+      this.$refs.loginFrom.validate(isOK => {
         if (isOK) {
-          console.log('校验成功')
+          // 表单验证成功向服务端发送请求
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginFrom
+          })
+            .then(result => {
+              // 请求成功后将返回数据中的token存入浏览器中
+              window.localStorage.setItem('user_token', result.data.data.token)
+              this.$message({
+                message: '恭喜您，登陆成功',
+                type: 'success'
+              })
+              this.$router.push('/')
+            })
+            .catch(() => {
+              this.$message({
+                message: '手机号或验证码不正确，请检验',
+                type: 'warning'
+              })
+            })
         }
       })
     }
