@@ -9,7 +9,7 @@
             数据校验-1 el-form组件绑定 model属性 => 数据对象
             数据校验-2 el-form绑定 rules规则
         -->
-        <el-form ref="loginFrom" :model="loginFrom" :rules="loginRules">
+        <el-form ref="loginFrom" :model="loginFrom" :rules="loginRules" @keyup.enter.native.prevent="login">
           <!-- 数据校验-3 el-form-item配置prop，prop是校验的字段名(只写字段名)  -->
           <el-form-item prop="mobile">
             <el-input v-model="loginFrom.mobile" placeholder="请您输入手机号"></el-input>
