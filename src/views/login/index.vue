@@ -45,7 +45,7 @@ export default {
       loginFrom: {
         mobile: '', // 手机号
         code: '', // 验证码
-        agree: false // 是否同意协议
+        agree: true // 是否同意协议
       },
       loginRules: {
         // 登录规则集合对象
@@ -78,7 +78,7 @@ export default {
           })
             .then(result => {
               // 请求成功后将返回数据中的token存入浏览器中
-              window.localStorage.setItem('user_token', result.data.data.token)
+              window.localStorage.setItem('user_token', result.data.token)
               this.$message({
                 message: '恭喜您，登陆成功',
                 type: 'success'
