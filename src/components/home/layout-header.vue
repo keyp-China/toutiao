@@ -36,12 +36,8 @@ export default {
   methods: {
     // 获取用户个人信息
     getUserInfo () {
-      let token = window.localStorage.getItem('user_token')
       this.$axios({
-        url: '/user/profile',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        url: '/user/profile'
       }).then(result => {
         this.userInfo = result.data.data
       })
@@ -52,7 +48,7 @@ export default {
         this.$router.push('/home/account')
       } else if (command === 'gitHub') {
         // GitHub
-        window.location.href = 'https://github.com/keyp-China/toutiao'
+        window.location.href = `https://github.com/keyp-China/toutiao`
       } else {
         // 退出
         this.$confirm('你确定是否要退出当前用户?', '提示', {
