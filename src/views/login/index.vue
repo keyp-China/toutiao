@@ -75,22 +75,15 @@ export default {
             url: '/authorizations',
             method: 'post',
             data: this.loginFrom
+          }).then(result => {
+            // 请求成功后将返回数据中的token存入浏览器中
+            window.localStorage.setItem('user_token', result.data.token)
+            this.$message({
+              message: '恭喜您，登陆成功',
+              type: 'success'
+            })
+            this.$router.push('/')
           })
-            .then(result => {
-              // 请求成功后将返回数据中的token存入浏览器中
-              window.localStorage.setItem('user_token', result.data.token)
-              this.$message({
-                message: '恭喜您，登陆成功',
-                type: 'success'
-              })
-              this.$router.push('/')
-            })
-            .catch(() => {
-              this.$message({
-                message: '手机号或验证码不正确，请检验',
-                type: 'warning'
-              })
-            })
         }
       })
     }
