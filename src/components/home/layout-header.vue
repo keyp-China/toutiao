@@ -8,7 +8,7 @@
     </el-col>
     <el-col :span="4" class="right">
       <img class="head-img" :src="userInfo.photo?userInfo.photo:defaultPhoto" />
-      <el-dropdown trigger="click">
+      <el-dropdown trigger="click" @command="handleCommand">
         <!-- 匿名插槽 -->
         <span class="el-dropdown-link">
           {{userInfo.name}}
@@ -16,9 +16,9 @@
         </span>
         <!-- 具名插槽 -->
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人信息</el-dropdown-item>
-          <el-dropdown-item>git地址</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item command="userInfo">个人信息</el-dropdown-item>
+          <el-dropdown-item command="gitHub">git地址</el-dropdown-item>
+          <el-dropdown-item command="quit">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-col>
@@ -29,11 +29,12 @@
 export default {
   data () {
     return {
-      userInfo: {},
-      defaultPhoto: require('../../assets/img/avatar.jpg')
+      userInfo: {}, // 用户对象
+      defaultPhoto: require('../../assets/img/avatar.jpg') // 默认用户头像
     }
   },
   methods: {
+    // 获取用户个人信息
     getUserInfo () {
       let token = window.localStorage.getItem('user_token')
       this.$axios({
@@ -44,6 +45,29 @@ export default {
       }).then(result => {
         this.userInfo = result.data.data
       })
+    },
+    handleCommand (command) {
+      if (command === 'userInfo') {
+        // 个人信息
+        this.$router.push('/home/account')
+      } else if (command === 'gitHub') {
+        // GitHub
+        window.location.href = 'https://github.com/keyp-China/toutiao'
+      } else {
+        // 退出
+        this.$confirm('你确定是否要退出当前用户?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '退出成功!'
+          })
+          window.localStorage.clear()
+          this.$router.push('/login')
+        })
+      }
     }
   },
   created () {
