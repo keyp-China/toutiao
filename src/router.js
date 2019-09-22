@@ -21,10 +21,15 @@ export default new Router({
     {
       path: '/home',
       component: Home,
-      children: [{
-        path: '',
-        component: Main
-      }]
+      children: [
+        {
+          path: '',
+          component: Main
+        },
+        {
+          path: 'comment',
+          component: () => import('./views/comment')
+        }]
     },
     {
       path: '/login',

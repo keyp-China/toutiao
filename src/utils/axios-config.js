@@ -1,6 +1,12 @@
 import axios from 'axios'
+import jsonBigInt from 'json-bigint'
 import router from '../router'
 import { Message } from 'element-ui'
+
+axios.defaults.transformResponse = [function (data) {
+  // data 是响应回来的字符串
+  return jsonBigInt.parse(data)
+}]
 
 // axios请求数据拦截器
 axios.interceptors.request.use(function (config) {
