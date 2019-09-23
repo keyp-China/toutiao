@@ -18,8 +18,12 @@
           <el-card class="img-item" v-for="item in list" :key="item.id">
             <img :src="item.url" alt />
             <div class="operate">
-              <i :style="{color: item.is_collected ? 'red' : '#000'}" class="el-icon-star-on"></i>
-              <i class="el-icon-delete-solid"></i>
+              <i
+                @click="changeCollected(item)"
+                :style="{color: item.is_collected ? 'red' : '#000'}"
+                class="el-icon-star-on"
+              ></i>
+              <i @click="delMaterial(item.id)" class="el-icon-delete-solid"></i>
             </div>
           </el-card>
         </div>
@@ -62,6 +66,29 @@ export default {
     }
   },
   methods: {
+    // 收藏状态切换
+    changeCollected (item) {
+      this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: { collect: !item.is_collected }
+      }).then(() => {
+        this.$message({ message: `素材${item.is_collected ? '取消' : ''}收藏成功`, type: 'success' })
+        this.getMaterial()
+      })
+    },
+    // 删除素材
+    delMaterial (id) {
+      this.$confirm('你确定要删除该素材吗？').then(() => {
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(() => {
+          this.$message({ message: '删除素材成功', type: 'success' })
+          this.getMaterial()
+        })
+      })
+    },
     //   上传方法
     uploadImg (params) {
       // 声明一个新的表单
@@ -73,6 +100,7 @@ export default {
         method: 'post',
         data
       }).then(() => {
+        this.$message({ message: '素材上传成功', type: 'success' })
         this.getMaterial()
       })
     },
@@ -83,6 +111,7 @@ export default {
     },
     //   当页码改变时 会传入一个参数
     sizeChange (newSize) {
+      this.page.currentPage = 1
       this.page.pageSize = newSize // 将最新页码赋值给currentPage
       this.getMaterial() // 获取最新数据
     },
@@ -147,6 +176,7 @@ export default {
       align-items: center;
       i {
         font-size: 18px;
+        cursor: pointer;
       }
     }
   }

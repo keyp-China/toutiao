@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 
 axios.defaults.transformResponse = [function (data) {
   // data 是响应回来的字符串
-  return jsonBigInt.parse(data)
+  return data ? jsonBigInt.parse(data) : {} // 换了一个转化方法 使得 计算更精确 保证id不失真
 }]
 
 // axios请求数据拦截器
