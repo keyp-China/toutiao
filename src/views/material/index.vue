@@ -57,7 +57,7 @@ export default {
     return {
       activeName: 'all', // 默认选中全部
       list: [], // 定义一个list接收数据
-      //   分页信息
+      // 分页信息
       page: {
         total: 0,
         currentPage: 1,
@@ -104,12 +104,12 @@ export default {
         this.getMaterial()
       })
     },
-    //   当页码改变时 会传入一个参数
+    // 当页码改变时 会传入一个参数
     currentChange (newPage) {
       this.page.currentPage = newPage // 将最新页码赋值给currentPage
       this.getMaterial() // 获取最新数据
     },
-    //   当页码改变时 会传入一个参数
+    // 当页码改变时 会传入一个参数
     sizeChange (newSize) {
       this.page.currentPage = 1
       this.page.pageSize = newSize // 将最新页码赋值给currentPage
