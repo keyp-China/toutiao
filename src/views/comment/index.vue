@@ -3,7 +3,6 @@
     v-loading="loading"
     element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(180, 180, 180, 0.4)"
   >
     <bread-crumb slot="header">
       <template slot="title">评论列表</template>
@@ -15,7 +14,7 @@
       <el-table-column prop="fans_comment_count" label="粉丝评论数" align="center"></el-table-column>
       <el-table-column prop label="操作" align="center">
         <template slot-scope="obj">
-          <el-button type="text" size="small">查看</el-button>
+          <el-button type="text" size="small">修改</el-button>
           <el-button
             type="text"
             size="small"
