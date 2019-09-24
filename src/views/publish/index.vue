@@ -4,12 +4,24 @@
       <template slot="title">发表文章</template>
     </bread-crumb>
     {{formData}}
-    <el-form :model="formData" ref="formData" :rules="rules" style="margin-left: 50px" label-width="80px">
+    <el-form
+      :model="formData"
+      ref="formData"
+      :rules="rules"
+      style="margin-left: 50px"
+      label-width="80px"
+    >
       <el-form-item label="标题" prop="title">
         <el-input v-model="formData.title" placeholder="请输入标题" style="width:400px"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <el-input v-model="formData.content" type="textarea" :rows="8" placeholder="请输入内容" style="width:900px"></el-input>
+        <el-input
+          v-model="formData.content"
+          type="textarea"
+          :rows="8"
+          placeholder="请输入内容"
+          style="width:900px"
+        ></el-input>
       </el-form-item>
       <el-form-item label="封面">
         <el-radio-group v-model="formData.cover.type">
@@ -40,14 +52,17 @@ export default {
         title: '', // 标题
         content: '', // 内容
         channel_id: null, // 频道id
-        cover: { // 封面
+        cover: {
+          // 封面
           type: 0,
           images: []
         }
       },
       rules: {
-        title: [{ required: true, message: '标题不允许为空' },
-          { min: 5, max: 20, message: '长度在 5 到 20 个字符' }],
+        title: [
+          { required: true, message: '标题不允许为空' },
+          { min: 5, max: 20, message: '长度在 5 到 20 个字符' }
+        ],
         content: [{ required: true, message: '内容不允许为空' }],
         channel_id: [{ required: true, message: '频道不允许为空' }]
       },
@@ -55,14 +70,23 @@ export default {
     }
   },
   methods: {
+    // 获取指定文章
+    getArticleById (articlesId) {
+      this.$axios({
+        url: `/articles/${articlesId}`
+      }).then(result => {
+        this.formData = result.data
+      })
+    },
     // 发布文章
     publishArticle (draft) {
+      // 获取是否有id
+      let { articlesId } = this.$route.params
       this.$refs.formData.validate(isOk => {
-        debugger
         if (isOk) {
           this.$axios({
-            url: '/articles',
-            method: 'post',
+            url: articlesId ? `/articles/${articlesId}` : '/articles',
+            method: articlesId ? 'put' : 'post',
             data: this.formData,
             params: { draft }
           }).then(() => {
@@ -83,6 +107,11 @@ export default {
   },
   created () {
     this.getChannels()
+    // 判断是否存在id 是新增还是修改
+    let { articlesId } = this.$route.params
+    if (articlesId) {
+      this.getArticleById(articlesId) // 获取指定文章的方法
+    }
   }
 }
 </script>

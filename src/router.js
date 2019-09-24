@@ -24,22 +24,26 @@ export default new Router({
       children: [
         {
           path: '',
-          component: Main
+          component: Main // 首页
         },
         {
-          path: 'comment',
+          path: 'comment', // 评论列表
           component: () => import('./views/comment')
         },
         {
-          path: 'material',
+          path: 'material', // 素材管理
           component: () => import('./views/material')
         },
         {
-          path: 'articles',
+          path: 'articles', // 内容列表
           component: () => import('./views/articles')
         },
         {
-          path: 'publish',
+          path: 'publish', // 发布文章
+          component: () => import('./views/publish')
+        },
+        {
+          path: 'publish/:articlesId', // 修改文章
           component: () => import('./views/publish')
         }
       ]

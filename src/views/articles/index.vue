@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="right">
-          <span>
+          <span @click="editArticles(item.id)">
             <i class="el-icon-edit"></i>修改
           </span>
           <span @click="delArticles(item.id)">
@@ -90,6 +90,11 @@ export default {
     }
   },
   methods: {
+    // 修改文章
+    editArticles (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
+    // 删除文章
     delArticles (id) {
       this.$confirm('你确定要删除该文章内容吗？').then(() => {
         this.$axios({
