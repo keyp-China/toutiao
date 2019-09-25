@@ -3,7 +3,6 @@
     <bread-crumb slot="header">
       <template slot="title">发表文章</template>
     </bread-crumb>
-    {{formData}}
     <el-form
       :model="formData"
       ref="formData"
@@ -15,15 +14,9 @@
         <el-input v-model="formData.title" placeholder="请输入标题" style="width:400px"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <el-input
-          v-model="formData.content"
-          type="textarea"
-          :rows="8"
-          placeholder="请输入内容"
-          style="width:900px"
-        ></el-input>
+        <quill-editor v-model="formData.content" style='height:400px;width:1400px;'></quill-editor>
       </el-form-item>
-      <el-form-item label="封面">
+      <el-form-item label="封面" style="margin-top:80px">
         <el-radio-group v-model="formData.cover.type">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
@@ -52,8 +45,7 @@ export default {
         title: '', // 标题
         content: '', // 内容
         channel_id: null, // 频道id
-        cover: {
-          // 封面
+        cover: { // 封面
           type: 0,
           images: []
         }
@@ -61,7 +53,7 @@ export default {
       rules: {
         title: [
           { required: true, message: '标题不允许为空' },
-          { min: 5, max: 20, message: '长度在 5 到 20 个字符' }
+          { min: 5, max: 50, message: '长度在 5 到 50 个字符' }
         ],
         content: [{ required: true, message: '内容不允许为空' }],
         channel_id: [{ required: true, message: '频道不允许为空' }]
