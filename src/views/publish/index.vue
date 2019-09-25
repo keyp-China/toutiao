@@ -17,14 +17,15 @@
         <quill-editor v-model="formData.content" style='height:400px;width:1400px;'></quill-editor>
       </el-form-item>
       <el-form-item label="封面" style="margin-top:80px">
-        <el-radio-group v-model="formData.cover.type">
+        <el-radio-group v-model="formData.cover.type" @change="coverTypeChange">
           <el-radio :label="1">单图</el-radio>
           <el-radio :label="3">三图</el-radio>
           <el-radio :label="0">无图</el-radio>
           <el-radio :label="-1">自动</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="频道" prop="channel_id">
+      <cover-image :images="formData.cover.images" @selectImg="selectImg"></cover-image>
+      <el-form-item label="频道" prop="channel_id" style="margin-top:10px">
         <el-select v-model="formData.channel_id">
           <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
@@ -46,14 +47,14 @@ export default {
         content: '', // 内容
         channel_id: null, // 频道id
         cover: { // 封面
-          type: 0,
-          images: []
+          type: 1,
+          images: ['']
         }
       },
       rules: {
         title: [
           { required: true, message: '标题不允许为空' },
-          { min: 5, max: 50, message: '长度在 5 到 50 个字符' }
+          { min: 5, message: '标题长度不能小于5个字符' }
         ],
         content: [{ required: true, message: '内容不允许为空' }],
         channel_id: [{ required: true, message: '频道不允许为空' }]
@@ -62,6 +63,22 @@ export default {
     }
   },
   methods: {
+    // 接收子传值
+    selectImg (url, index) {
+      // alert(url)
+      // alert(index)
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
+    },
+    // 封面类型改变事件
+    coverTypeChange () {
+      if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']
+      } else {
+        this.formData.cover.images = []
+      }
+    },
     // 获取指定文章
     getArticleById (articlesId) {
       this.$axios({
