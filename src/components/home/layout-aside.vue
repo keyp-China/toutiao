@@ -6,7 +6,7 @@
     </div>
     <!-- el-menu => router属性 true时,启用路由 -->
     <!-- :router="true"  和  router  -->
-    <el-menu router background-color="#353b4e" text-color="#adafb5" active-text-color="#ffd04b">
+    <el-menu router background-color="#353b4e" text-color="#adafb5" active-text-color="#ffd04b" unique-opened>
       <el-menu-item index="/home">
         <i class="el-icon-s-home"></i>
         <span slot="title">首页</span>
