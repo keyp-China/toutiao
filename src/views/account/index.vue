@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus' // 引入事件公交
 export default {
   data () {
     return {
@@ -67,6 +68,7 @@ export default {
       }).then(result => {
         this.formData.photo = result.data.photo
         this.$message({ message: '头像更换成功', type: 'success' })
+        eventBus.$emit('updateUserInfo')
       })
     },
     // 修改用户信息
@@ -79,6 +81,7 @@ export default {
             data: this.formData
           }).then(() => {
             this.$message({ message: '账户信息修改成功', type: 'success' })
+            eventBus.$emit('updateUserInfo')
           })
         }
       })

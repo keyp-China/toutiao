@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus' // 引入事件公交
 export default {
   data () {
     return {
@@ -68,6 +69,10 @@ export default {
   },
   created () {
     this.getUserInfo()
+
+    eventBus.$on('updateUserInfo', () => {
+      this.getUserInfo()
+    })
   }
 }
 </script>
