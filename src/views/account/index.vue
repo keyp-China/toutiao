@@ -58,42 +58,39 @@ export default {
   },
   methods: {
     // 上传头像的方法
-    uploadImg (params) {
+    async uploadImg (params) {
       let formdata = new FormData()
       formdata.append('photo', params.file)
-      this.$axios({
+      let result = await this.$axios({
         url: '/user/photo',
         method: 'patch',
         data: formdata
-      }).then(result => {
-        this.formData.photo = result.data.photo
-        this.$message({ message: '头像更换成功', type: 'success' })
-        eventBus.$emit('updateUserInfo')
       })
+      this.formData.photo = result.data.photo
+      this.$message({ message: '头像更换成功', type: 'success' })
+      eventBus.$emit('updateUserInfo')
     },
     // 修改用户信息
     editUserInfo () {
-      this.$refs.formData.validate(isOK => {
+      this.$refs.formData.validate(async isOK => {
         if (isOK) {
-          this.$axios({
+          await this.$axios({
             url: '/user/profile',
             method: 'patch',
             data: this.formData
-          }).then(() => {
-            this.$message({ message: '账户信息修改成功', type: 'success' })
-            eventBus.$emit('updateUserInfo')
           })
+          this.$message({ message: '账户信息修改成功', type: 'success' })
+          eventBus.$emit('updateUserInfo')
         }
       })
     },
     // 获取用户信息
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let result = await this.$axios({
         url: '/user/profile'
-      }).then(result => {
-        this.formData = result.data
-        eventBus.$emit('updateUserInfo')
       })
+      this.formData = result.data
+      eventBus.$emit('updateUserInfo')
     }
   },
   created () {

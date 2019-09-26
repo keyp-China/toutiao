@@ -36,12 +36,11 @@ export default {
   },
   methods: {
     // 获取用户个人信息
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let result = await this.$axios({
         url: '/user/profile'
-      }).then(result => {
-        this.userInfo = result.data
       })
+      this.userInfo = result.data
     },
     handleCommand (command) {
       if (command === 'userInfo') {
@@ -63,7 +62,7 @@ export default {
           })
           window.localStorage.clear()
           this.$router.push('/login')
-        })
+        }).catch(() => {})
       }
     }
   },

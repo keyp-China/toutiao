@@ -96,15 +96,14 @@ export default {
     },
     // 删除文章
     delArticles (id) {
-      this.$confirm('你确定要删除该文章内容吗？').then(() => {
-        this.$axios({
+      this.$confirm('你确定要删除该文章内容吗？').then(async () => {
+        await this.$axios({
           url: `/articles/${id.toString()}`,
           method: 'delete'
-        }).then(() => {
-          this.$message({ message: '删除内容成功', type: 'success' })
-          this.getArticles()
         })
-      })
+        this.$message({ message: '删除内容成功', type: 'success' })
+        this.getArticles()
+      }).catch(() => {})
     },
     // 查询form改变事件方法
     changeFrom () {
@@ -122,33 +121,37 @@ export default {
       this.getArticles()
     },
     // 获取内容列表
-    getArticles () {
+    async getArticles () {
       let params = {
+        // 文章状态
         status: this.searchFrom.radio === 'all' ? null : this.searchFrom.radio,
+        // 频道ID
         channel_id: this.searchFrom.select,
+        // 开始时间
         begin_pubdate: this.searchFrom.date.length
           ? this.searchFrom.date[0]
           : null,
+        // 结束时间
         end_pubdate:
           this.searchFrom.date.length > 1 ? this.searchFrom.date[1] : null,
+        // 当前页码
         page: this.page.currentPage,
+        // 每页条数
         per_page: this.page.pageSize
       }
-      this.$axios({
+      let result = await this.$axios({
         url: '/articles',
         params
-      }).then(result => {
-        this.page.total = result.data.total_count
-        this.list = result.data.results
       })
+      this.page.total = result.data.total_count
+      this.list = result.data.results
     },
     // 获取频道列表
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     }
   },
   filters: {

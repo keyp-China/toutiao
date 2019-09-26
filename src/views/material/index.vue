@@ -67,42 +67,39 @@ export default {
   },
   methods: {
     // 收藏状态切换
-    changeCollected (item) {
-      this.$axios({
+    async changeCollected (item) {
+      await this.$axios({
         url: `/user/images/${item.id}`,
         method: 'put',
         data: { collect: !item.is_collected }
-      }).then(() => {
-        this.$message({ message: `素材${item.is_collected ? '取消' : ''}收藏成功`, type: 'success' })
-        this.getMaterial()
       })
+      this.$message({ message: `素材${item.is_collected ? '取消' : ''}收藏成功`, type: 'success' })
+      this.getMaterial()
     },
     // 删除素材
     delMaterial (id) {
-      this.$confirm('你确定要删除该素材吗？').then(() => {
-        this.$axios({
+      this.$confirm('你确定要删除该素材吗？').then(async () => {
+        await this.$axios({
           url: `/user/images/${id}`,
           method: 'delete'
-        }).then(() => {
-          this.$message({ message: '删除素材成功', type: 'success' })
-          this.getMaterial()
         })
-      })
+        this.$message({ message: '删除素材成功', type: 'success' })
+        this.getMaterial()
+      }).catch(() => {})
     },
     //   上传方法
-    uploadImg (params) {
+    async uploadImg (params) {
       // 声明一个新的表单
       const data = new FormData()
       data.append('image', params.file)
       // 上传文件
-      this.$axios({
+      await this.$axios({
         url: '/user/images',
         method: 'post',
         data
-      }).then(() => {
-        this.$message({ message: '素材上传成功', type: 'success' })
-        this.getMaterial()
       })
+      this.$message({ message: '素材上传成功', type: 'success' })
+      this.getMaterial()
     },
     // 当页码改变时 会传入一个参数
     currentChange (newPage) {
@@ -122,20 +119,19 @@ export default {
       this.getMaterial()
     },
     //   获取素材列表
-    getMaterial () {
+    async getMaterial () {
       // this.activeName === 'collect' 相当于去找收藏的数据
       // 如果不等于collect 相等于去找全部的数据
-      this.$axios({
+      let result = await this.$axios({
         url: '/user/images',
         params: {
           collect: this.activeName === 'collect',
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count // 赋值总数  每次总条数都会重新赋值
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count // 赋值总数  每次总条数都会重新赋值
     }
   },
   created () {

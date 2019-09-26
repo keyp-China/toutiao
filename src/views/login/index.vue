@@ -68,22 +68,21 @@ export default {
     login () {
       // 校验整个表单的规则
       // validate 是一个方法 => 方法中传入的一个函数 两个校验参数  是否校验成功/未校验成功的字段
-      this.$refs.loginFrom.validate(isOK => {
-        if (isOK) {
+      this.$refs.loginFrom.validate(async isOk => {
+        if (isOk) {
           // 表单验证成功向服务端发送请求
-          this.$axios({
+          let result = await this.$axios({
             url: '/authorizations',
             method: 'post',
             data: this.loginFrom
-          }).then(result => {
-            // 请求成功后将返回数据中的token存入浏览器中
-            window.localStorage.setItem('user_token', result.data.token)
-            this.$message({
-              message: '恭喜您，登陆成功',
-              type: 'success'
-            })
-            this.$router.push('/')
           })
+          // 请求成功后将返回数据中的token存入浏览器中
+          window.localStorage.setItem('user_token', result.data.token)
+          this.$message({
+            message: '恭喜您，登陆成功',
+            type: 'success'
+          })
+          this.$router.push('/')
         }
       })
     }

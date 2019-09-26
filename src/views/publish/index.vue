@@ -14,7 +14,7 @@
         <el-input v-model="formData.title" placeholder="请输入标题" style="width:400px"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <quill-editor v-model="formData.content" style='height:400px;width:1400px;'></quill-editor>
+        <quill-editor v-model="formData.content" style="height:400px;width:1400px;"></quill-editor>
       </el-form-item>
       <el-form-item label="封面" style="margin-top:80px">
         <el-radio-group v-model="formData.cover.type" @change="coverTypeChange">
@@ -46,7 +46,8 @@ export default {
         title: '', // 标题
         content: '', // 内容
         channel_id: null, // 频道id
-        cover: { // 封面
+        cover: {
+          // 封面
           type: 1,
           images: ['']
         }
@@ -65,9 +66,9 @@ export default {
   methods: {
     // 接收子传值
     selectImg (url, index) {
-      // alert(url)
-      // alert(index)
-      this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
+      this.formData.cover.images = this.formData.cover.images.map((item, i) =>
+        i === index ? url : item
+      )
     },
     // 封面类型改变事件
     coverTypeChange () {
@@ -80,38 +81,35 @@ export default {
       }
     },
     // 获取指定文章
-    getArticleById (articlesId) {
-      this.$axios({
+    async getArticleById (articlesId) {
+      let result = await this.$axios({
         url: `/articles/${articlesId}`
-      }).then(result => {
-        this.formData = result.data
       })
+      this.formData = result.data
     },
     // 发布文章
     publishArticle (draft) {
       // 获取是否有id
       let { articlesId } = this.$route.params
-      this.$refs.formData.validate(isOk => {
+      this.$refs.formData.validate(async isOk => {
         if (isOk) {
-          this.$axios({
+          await this.$axios({
             url: articlesId ? `/articles/${articlesId}` : '/articles',
             method: articlesId ? 'put' : 'post',
             data: this.formData,
             params: { draft }
-          }).then(() => {
-            this.$message({ message: '数据处理成功', type: 'success' })
-            this.$router.push('/home/articles')
           })
+          this.$message({ message: '数据处理成功', type: 'success' })
+          this.$router.push('/home/articles')
         }
       })
     },
     // 获取频道列表
-    getChannels () {
-      this.$axios({
+    async getChannels () {
+      let result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     }
   },
   created () {

@@ -9,6 +9,8 @@
             background
             layout="prev, pager, next"
             :total="page.total"
+            :page-size="page.pageSize"
+            :current-page="page.currentPage"
             @current-change="currentChange"
           ></el-pagination>
         </el-row>
@@ -36,17 +38,16 @@ export default {
   },
   methods: {
     // 上传方法
-    uploadImg (params) {
+    async uploadImg (params) {
       const data = new FormData()
       data.append('image', params.file)
       // 上传文件
-      this.$axios({
+      let result = await this.$axios({
         url: '/user/images',
         method: 'post',
         data
-      }).then(result => {
-        this.sendImg(result.data.url) // 调用给父传值的方法
       })
+      this.sendImg(result.data.url) // 调用给父传值的方法
     },
     // 给父传值
     sendImg (url) {
@@ -58,18 +59,17 @@ export default {
       this.getMaterial()
     },
     // 获取素材
-    getMaterial () {
-      this.$axios({
+    async getMaterial () {
+      let result = await this.$axios({
         url: '/user/images',
         params: {
           collect: false,
           per_page: this.page.pageSize,
           page: this.page.currentPage
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count
     }
   },
   created () {

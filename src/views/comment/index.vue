@@ -69,24 +69,23 @@ export default {
     // 切换评论状态
     triggerStatus (row) {
       let status = row.comment_status ? '关闭' : '开启'
-      this.$confirm(`你确定是否要${status}该条评论么?`).then(() => {
-        this.$axios({
+      this.$confirm(`你确定是否要${status}该条评论么?`).then(async () => {
+        await this.$axios({
           url: '/comments/status',
           method: 'put',
           params: { article_id: row.id.toString() },
           data: { allow_comment: !row.comment_status }
-        }).then(result => {
-          this.$message({ message: `${status}成功！`, type: 'success' })
-          this.getComment()
         })
-      })
+        this.$message({ message: `${status}成功！`, type: 'success' })
+        this.getComment()
+      }).catch(() => {})
     },
     // 判断评论状态显示
     checkStatus (row, column, cellValue, index) {
       return cellValue ? `正常` : `关闭`
     },
     // 获取评论列表
-    getComment () {
+    async getComment () {
       this.loading = true
       this.$axios({
         url: '/articles',
