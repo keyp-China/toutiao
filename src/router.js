@@ -19,6 +19,10 @@ export default new Router({
       redirect: '/home'
     },
     {
+      path: '*',
+      component: () => import('./views/404')
+    },
+    {
       path: '/home',
       component: Home,
       children: [
@@ -49,6 +53,9 @@ export default new Router({
         {
           path: 'account', // 账户信息
           component: () => import('./views/account')
+        }, {
+          path: '*', // 通配找不到跳转至404页面 二级以下路由只能写在最后
+          component: () => import('./views/home/404')
         }
       ]
     },
