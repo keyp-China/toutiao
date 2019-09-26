@@ -3,6 +3,7 @@ import layoutHeader from './home/layout-header'
 import breadCrumb from './common/bread-crumb'
 import coverImage from './publish/cover-image'
 import selectImage from './publish/select-image'
+import fansMenu from './fans/fans-menu'
 
 // require styles
 import 'quill/dist/quill.core.css'
@@ -20,5 +21,6 @@ export default {
     Vue.component('quill-editor', quillEditor) // 全局注册富文本编辑器
     Vue.component('cover-image', coverImage) // 上传封面组件
     Vue.component('select-image', selectImage) // 上传封面选择素材组件
+    Vue.component('fans-menu', fansMenu) // 上传封面选择素材组件
   }
 }
