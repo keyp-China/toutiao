@@ -1,9 +1,17 @@
 <template>
-  <div style="font-size:400px;color:yellow;">首页内容</div>
+  <div>
+    <el-calendar v-model="value"></el-calendar>
+  </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      value: new Date()
+    }
+  }
+}
 </script>
 
 <style>

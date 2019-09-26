@@ -92,6 +92,7 @@ export default {
         url: '/user/profile'
       }).then(result => {
         this.formData = result.data
+        eventBus.$emit('updateUserInfo')
       })
     }
   },
