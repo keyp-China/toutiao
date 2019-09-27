@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { login } from '../../api/login'
 export default {
   data () {
     // rule当前规则  value当前表单项的值  callback 回调函数
@@ -70,12 +71,9 @@ export default {
       // validate 是一个方法 => 方法中传入的一个函数 两个校验参数  是否校验成功/未校验成功的字段
       this.$refs.loginFrom.validate(async isOk => {
         if (isOk) {
+          let data = this.loginFrom
           // 表单验证成功向服务端发送请求
-          let result = await this.$axios({
-            url: '/authorizations',
-            method: 'post',
-            data: this.loginFrom
-          })
+          let result = await login(data)
           // 请求成功后将返回数据中的token存入浏览器中
           window.localStorage.setItem('user_token', result.data.token)
           this.$message({

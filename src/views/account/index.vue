@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { uploadImg, editUserInfo, getUserInfo } from '../../api/account'
 import eventBus from '../../utils/eventBus' // 引入事件公交
 export default {
   data () {
@@ -61,11 +62,7 @@ export default {
     async uploadImg (params) {
       let formdata = new FormData()
       formdata.append('photo', params.file)
-      let result = await this.$axios({
-        url: '/user/photo',
-        method: 'patch',
-        data: formdata
-      })
+      let result = await uploadImg(formdata)
       this.formData.photo = result.data.photo
       this.$message({ message: '头像更换成功', type: 'success' })
       eventBus.$emit('updateUserInfo')
@@ -74,11 +71,7 @@ export default {
     editUserInfo () {
       this.$refs.formData.validate(async isOK => {
         if (isOK) {
-          await this.$axios({
-            url: '/user/profile',
-            method: 'patch',
-            data: this.formData
-          })
+          await editUserInfo(this.formData)
           this.$message({ message: '账户信息修改成功', type: 'success' })
           eventBus.$emit('updateUserInfo')
         }
@@ -86,9 +79,7 @@ export default {
     },
     // 获取用户信息
     async getUserInfo () {
-      let result = await this.$axios({
-        url: '/user/profile'
-      })
+      let result = await getUserInfo()
       this.formData = result.data
       eventBus.$emit('updateUserInfo')
     }

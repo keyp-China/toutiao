@@ -87,11 +87,11 @@ export default {
 }
 </script>
 
-<style lang="less">
-.fanspic .el-progress-bar__outer {
+<style lang="less" scoped>
+.fanspic /deep/ .el-progress-bar__outer {
   background-color: #fa8665 !important;
 }
-.fanspic .el-progress-bar__inner {
+.fanspic /deep/ .el-progress-bar__inner {
   border-radius: 0px !important;
 }
 .sex-header,

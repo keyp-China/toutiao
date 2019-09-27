@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { getUserInfo } from '../../api/account'
 import eventBus from '../../utils/eventBus' // 引入事件公交
 export default {
   data () {
@@ -37,9 +38,7 @@ export default {
   methods: {
     // 获取用户个人信息
     async getUserInfo () {
-      let result = await this.$axios({
-        url: '/user/profile'
-      })
+      let result = await getUserInfo()
       this.userInfo = result.data
     },
     handleCommand (command) {

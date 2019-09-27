@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import { getArticles, delArticles, getChannels } from '../../api/articles'
 export default {
   data () {
     return {
@@ -97,10 +98,7 @@ export default {
     // 删除文章
     delArticles (id) {
       this.$confirm('你确定要删除该文章内容吗？').then(async () => {
-        await this.$axios({
-          url: `/articles/${id.toString()}`,
-          method: 'delete'
-        })
+        await delArticles(id)
         this.$message({ message: '删除内容成功', type: 'success' })
         this.getArticles()
       }).catch(() => {})
@@ -139,18 +137,13 @@ export default {
         // 每页条数
         per_page: this.page.pageSize
       }
-      let result = await this.$axios({
-        url: '/articles',
-        params
-      })
+      let result = await getArticles(params)
       this.page.total = result.data.total_count
       this.list = result.data.results
     },
     // 获取频道列表
     async getChannels () {
-      let result = await this.$axios({
-        url: '/channels'
-      })
+      let result = await getChannels()
       this.channels = result.data.channels
     }
   },

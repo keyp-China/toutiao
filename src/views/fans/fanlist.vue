@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { getFansList } from '../../api/fans'
 export default {
   data () {
     return {
@@ -45,10 +46,8 @@ export default {
     },
     // 获取粉丝列表
     async getFansList () {
-      let result = await this.$axios({
-        url: '/followers',
-        params: { page: this.page.currentPage, per_page: this.page.pageSize }
-      })
+      let params = { page: this.page.currentPage, per_page: this.page.pageSize }
+      let result = await getFansList(params)
       this.list = result.data.results
       this.page.total = result.data.total_count
     }

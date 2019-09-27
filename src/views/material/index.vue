@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { changeCollected, delMaterial, uploadImg, getMaterial } from '../../api/material'
 export default {
   data () {
     return {
@@ -68,24 +69,22 @@ export default {
   methods: {
     // 收藏状态切换
     async changeCollected (item) {
-      await this.$axios({
-        url: `/user/images/${item.id}`,
-        method: 'put',
-        data: { collect: !item.is_collected }
+      await changeCollected(item)
+      this.$message({
+        message: `素材${item.is_collected ? '取消' : ''}收藏成功`,
+        type: 'success'
       })
-      this.$message({ message: `素材${item.is_collected ? '取消' : ''}收藏成功`, type: 'success' })
       this.getMaterial()
     },
     // 删除素材
     delMaterial (id) {
-      this.$confirm('你确定要删除该素材吗？').then(async () => {
-        await this.$axios({
-          url: `/user/images/${id}`,
-          method: 'delete'
+      this.$confirm('你确定要删除该素材吗？')
+        .then(async () => {
+          await delMaterial(id)
+          this.$message({ message: '删除素材成功', type: 'success' })
+          this.getMaterial()
         })
-        this.$message({ message: '删除素材成功', type: 'success' })
-        this.getMaterial()
-      }).catch(() => {})
+        .catch(() => {})
     },
     //   上传方法
     async uploadImg (params) {
@@ -93,11 +92,7 @@ export default {
       const data = new FormData()
       data.append('image', params.file)
       // 上传文件
-      await this.$axios({
-        url: '/user/images',
-        method: 'post',
-        data
-      })
+      await uploadImg(data)
       this.$message({ message: '素材上传成功', type: 'success' })
       this.getMaterial()
     },
@@ -120,16 +115,14 @@ export default {
     },
     //   获取素材列表
     async getMaterial () {
+      let params = {
+        collect: this.activeName === 'collect',
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
+      }
       // this.activeName === 'collect' 相当于去找收藏的数据
       // 如果不等于collect 相等于去找全部的数据
-      let result = await this.$axios({
-        url: '/user/images',
-        params: {
-          collect: this.activeName === 'collect',
-          page: this.page.currentPage,
-          per_page: this.page.pageSize
-        }
-      })
+      let result = await getMaterial(params)
       this.list = result.data.results
       this.page.total = result.data.total_count // 赋值总数  每次总条数都会重新赋值
     }

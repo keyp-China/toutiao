@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { getComment, triggerStatus } from '../../api/comment'
 export default {
   data () {
     return {
@@ -69,16 +70,13 @@ export default {
     // 切换评论状态
     triggerStatus (row) {
       let status = row.comment_status ? '关闭' : '开启'
-      this.$confirm(`你确定是否要${status}该条评论么?`).then(async () => {
-        await this.$axios({
-          url: '/comments/status',
-          method: 'put',
-          params: { article_id: row.id.toString() },
-          data: { allow_comment: !row.comment_status }
+      this.$confirm(`你确定是否要${status}该条评论么?`)
+        .then(async () => {
+          await triggerStatus(row)
+          this.$message({ message: `${status}成功！`, type: 'success' })
+          this.getComment()
         })
-        this.$message({ message: `${status}成功！`, type: 'success' })
-        this.getComment()
-      }).catch(() => {})
+        .catch(() => {})
     },
     // 判断评论状态显示
     checkStatus (row, column, cellValue, index) {
@@ -87,19 +85,16 @@ export default {
     // 获取评论列表
     async getComment () {
       this.loading = true
-      this.$axios({
-        url: '/articles',
-        params: {
-          response_type: 'comment',
-          page: this.page.currentPage,
-          per_page: this.page.pageSize
-        }
-      }).then(result => {
-        this.list = result.data.results
-        // 设置total 总条数
-        this.page.total = result.data.total_count
-        this.loading = false
-      })
+      let params = {
+        response_type: 'comment',
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
+      }
+      let result = await getComment(params)
+      this.list = result.data.results
+      // 设置total 总条数
+      this.page.total = result.data.total_count
+      this.loading = false
     }
   },
   // 钩子函数 创建组件是执行

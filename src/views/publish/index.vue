@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { getChannels, getArticleById, publishArticle } from '../../api/articles'
 export default {
   data () {
     return {
@@ -82,9 +83,7 @@ export default {
     },
     // 获取指定文章
     async getArticleById (articlesId) {
-      let result = await this.$axios({
-        url: `/articles/${articlesId}`
-      })
+      let result = await getArticleById(articlesId)
       this.formData = result.data
     },
     // 发布文章
@@ -93,12 +92,9 @@ export default {
       let { articlesId } = this.$route.params
       this.$refs.formData.validate(async isOk => {
         if (isOk) {
-          await this.$axios({
-            url: articlesId ? `/articles/${articlesId}` : '/articles',
-            method: articlesId ? 'put' : 'post',
-            data: this.formData,
-            params: { draft }
-          })
+          let data = this.formData
+          let params = { draft }
+          await publishArticle(articlesId, data, params)
           this.$message({ message: '数据处理成功', type: 'success' })
           this.$router.push('/home/articles')
         }
@@ -106,9 +102,7 @@ export default {
     },
     // 获取频道列表
     async getChannels () {
-      let result = await this.$axios({
-        url: '/channels'
-      })
+      let result = await getChannels()
       this.channels = result.data.channels
     }
   },

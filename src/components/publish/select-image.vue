@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { uploadImg, getMaterial } from '../../api/material'
 export default {
   data () {
     return {
@@ -42,11 +43,7 @@ export default {
       const data = new FormData()
       data.append('image', params.file)
       // 上传文件
-      let result = await this.$axios({
-        url: '/user/images',
-        method: 'post',
-        data
-      })
+      let result = await uploadImg(data)
       this.sendImg(result.data.url) // 调用给父传值的方法
     },
     // 给父传值
@@ -60,14 +57,12 @@ export default {
     },
     // 获取素材
     async getMaterial () {
-      let result = await this.$axios({
-        url: '/user/images',
-        params: {
-          collect: false,
-          per_page: this.page.pageSize,
-          page: this.page.currentPage
-        }
-      })
+      let params = {
+        collect: false,
+        per_page: this.page.pageSize,
+        page: this.page.currentPage
+      }
+      let result = await getMaterial(params)
       this.list = result.data.results
       this.page.total = result.data.total_count
     }
