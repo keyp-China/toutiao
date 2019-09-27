@@ -58,6 +58,9 @@ export default new Router({
           path: 'fanlist', // 粉丝列表
           component: () => import('./views/fans/fanlist')
         }, {
+          path: 'fanpic', // 粉丝画像
+          component: () => import('./views/fans/fanpic')
+        }, {
           path: '*', // 通配找不到跳转至404页面 二级以下路由只能写在最后
           component: () => import('./views/home/404')
         }
